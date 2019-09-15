@@ -167,14 +167,14 @@ public class GlobalTransactionScanner extends AbstractAutoProxyCreator
                 "applicationId: " + applicationId + ", txServiceGroup: " + txServiceGroup);
         }
         //init TM
-        TMClient.init(applicationId, txServiceGroup);
+        TMClient.init(applicationId, txServiceGroup);   // init netty client & timeout checker & request sender
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(
                 "Transaction Manager Client is initialized. applicationId[" + applicationId + "] txServiceGroup["
                     + txServiceGroup + "]");
         }
         //init RM
-        RMClient.init(applicationId, txServiceGroup);
+        RMClient.init(applicationId, txServiceGroup);   // resource aop
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info(
                 "Resource Manager is initialized. applicationId[" + applicationId + "] txServiceGroup[" + txServiceGroup

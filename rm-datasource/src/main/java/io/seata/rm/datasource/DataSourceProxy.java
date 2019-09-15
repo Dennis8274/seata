@@ -90,7 +90,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
             public void run() {
                 TableMetaCache.refresh(DataSourceProxy.this);
             }
-        }, 0, TABLE_MATA_CHECKER_INTERVAL, TimeUnit.MILLISECONDS);
+        }, 0, TABLE_MATA_CHECKER_INTERVAL, TimeUnit.MILLISECONDS);  // 1min刷新一次datasource
     }
 
     /**
@@ -115,7 +115,7 @@ public class DataSourceProxy extends AbstractDataSourceProxy implements Resource
     @Override
     public ConnectionProxy getConnection() throws SQLException {
         Connection targetConnection = targetDataSource.getConnection();
-        return new ConnectionProxy(this, targetConnection);
+        return new ConnectionProxy(this, targetConnection); // connection proxy 代理
     }
 
     @Override

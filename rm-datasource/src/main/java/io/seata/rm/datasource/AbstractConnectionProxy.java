@@ -94,7 +94,7 @@ public abstract class AbstractConnectionProxy implements Connection {
     @Override
     public Statement createStatement() throws SQLException {
         Statement targetStatement = getTargetConnection().createStatement();
-        return new StatementProxy(this, targetStatement);
+        return new StatementProxy(this, targetStatement);   // statement proxy 语句代理执行
     }
 
     @Override

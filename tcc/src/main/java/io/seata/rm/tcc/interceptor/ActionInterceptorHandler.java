@@ -116,7 +116,7 @@ public class ActionInterceptorHandler {
         try {
             //registry branch record
             Long branchId = DefaultResourceManager.get().branchRegister(BranchType.TCC, actionName, null, xid,
-                applicationContextStr, null);
+                applicationContextStr, null);   // rm 注册分支事务
             return String.valueOf(branchId);
         } catch (Throwable t) {
             String msg = "TCC branch Register error, xid:" + xid;

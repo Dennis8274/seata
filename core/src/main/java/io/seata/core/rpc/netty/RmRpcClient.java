@@ -226,7 +226,7 @@ public final class RmRpcClient extends AbstractRpcRemotingClient {
             getClientChannelManager().reconnect(transactionServiceGroup);
             return;
         }
-        synchronized (getClientChannelManager().getChannels()) {
+        synchronized (getClientChannelManager().getChannels()) {    // 每一台server都要注册
             for (Map.Entry<String, Channel> entry : getClientChannelManager().getChannels().entrySet()) {
                 String serverAddress = entry.getKey();
                 Channel rmChannel = entry.getValue();

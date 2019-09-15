@@ -179,27 +179,27 @@ public class ConnectionProxy extends AbstractConnectionProxy {
 
     private void processGlobalTransactionCommit() throws SQLException {
         try {
-            register();
+            register(); // 分支事务注册
         } catch (TransactionException e) {
             recognizeLockKeyConflictException(e);
         }
 
         try {
-            if (context.hasUndoLog()) {
+            if (context.hasUndoLog()) { // 插入undo log
                if(JdbcConstants.ORACLE.equalsIgnoreCase(this.getDbType())) {
                    UndoLogManagerOracle.flushUndoLogs(this);
                } else {
                    UndoLogManager.flushUndoLogs(this);
                }
             }
-            targetConnection.commit();
+            targetConnection.commit();  // undo log 以及业务sql在一个事务内
         } catch (Throwable ex) {
             report(false);
             if (ex instanceof SQLException) {
                 throw new SQLException(ex);
             }
         }
-        report(true);
+        report(true);   // 上报分支事务提交
         context.reset();
     }
 

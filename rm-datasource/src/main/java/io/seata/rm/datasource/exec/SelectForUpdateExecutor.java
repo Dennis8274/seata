@@ -80,7 +80,7 @@ public class SelectForUpdateExecutor<T, S extends Statement> extends BaseTransac
 
                     if (RootContext.inGlobalTransaction()) {
                         //do as usual
-                        statementProxy.getConnectionProxy().checkLock(lockKeys);
+                        statementProxy.getConnectionProxy().checkLock(lockKeys);    // 锁住查询，在tc上查询
                     } else if (RootContext.requireGlobalLock()) {
                         //check lock key before commit just like DML to avoid reentrant lock problem(no xid thus can
                         // not reentrant)

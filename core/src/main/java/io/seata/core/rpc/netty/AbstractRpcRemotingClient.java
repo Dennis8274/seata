@@ -76,16 +76,16 @@ public abstract class AbstractRpcRemotingClient extends AbstractRpcRemoting
     private ClientMessageListener clientMessageListener;
     private final NettyPoolKey.TransactionRole transactionRole;
     private ExecutorService mergeSendExecutorService;
-    
+
     public AbstractRpcRemotingClient(NettyClientConfig nettyClientConfig, EventExecutorGroup eventExecutorGroup,
                                      ThreadPoolExecutor messageExecutor, NettyPoolKey.TransactionRole transactionRole) {
         super(messageExecutor);
         this.transactionRole = transactionRole;
         clientBootstrap = new RpcClientBootstrap(nettyClientConfig, eventExecutorGroup, this, transactionRole);
         clientChannelManager = new NettyClientChannelManager(
-            new NettyPoolableFactory(this, clientBootstrap), getPoolKeyFunction(), nettyClientConfig);
+                new NettyPoolableFactory(this, clientBootstrap), getPoolKeyFunction(), nettyClientConfig);
     }
-    
+
     public NettyClientChannelManager getClientChannelManager() {
         return clientChannelManager;
     }
@@ -110,16 +110,16 @@ public abstract class AbstractRpcRemotingClient extends AbstractRpcRemoting
         timerExecutor.scheduleAtFixedRate(new Runnable() {
             @Override
             public void run() {
-                clientChannelManager.reconnect(getTransactionServiceGroup());
+                clientChannelManager.reconnect(getTransactionServiceGroup());   // 重连
             }
-        }, SCHEDULE_INTERVAL_MILLS, SCHEDULE_INTERVAL_MILLS, TimeUnit.SECONDS);
+        }, SCHEDULE_INTERVAL_MILLS, SCHEDULE_INTERVAL_MILLS, TimeUnit.SECONDS); // 5s 重连
         mergeSendExecutorService = new ThreadPoolExecutor(MAX_MERGE_SEND_THREAD,
             MAX_MERGE_SEND_THREAD,
             KEEP_ALIVE_TIME, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<>(),
             new NamedThreadFactory(getThreadPrefix(), MAX_MERGE_SEND_THREAD));
-        mergeSendExecutorService.submit(new MergedSendRunnable());
-        super.init();
+        mergeSendExecutorService.submit(new MergedSendRunnable());  // 异步发送
+        super.init();   // timeout checker
     }
     
     @Override
@@ -288,7 +288,7 @@ public abstract class AbstractRpcRemotingClient extends AbstractRpcRemoting
     /**
      * The type Merged send runnable.
      */
-    private class MergedSendRunnable implements Runnable {
+    private class MergedSendRunnable implements Runnable {  //
 
         @Override
         public void run() {
@@ -307,7 +307,7 @@ public abstract class AbstractRpcRemotingClient extends AbstractRpcRemoting
                     }
 
                     MergedWarpMessage mergeMessage = new MergedWarpMessage();
-                    while (!basket.isEmpty()) {
+                    while (!basket.isEmpty()) { // basket里有多少发多少
                         RpcMessage msg = basket.poll();
                         mergeMessage.msgs.add((AbstractMessage) msg.getBody());
                         mergeMessage.msgIds.add(msg.getId());

@@ -47,7 +47,7 @@ public class DefaultTransactionManager implements TransactionManager {
         GlobalBeginRequest request = new GlobalBeginRequest();
         request.setTransactionName(name);
         request.setTimeout(timeout);
-        GlobalBeginResponse response = (GlobalBeginResponse)syncCall(request);
+        GlobalBeginResponse response = (GlobalBeginResponse)syncCall(request);  // 注册事务
         if (response.getResultCode() == ResultCode.Failed) {
             throw new TransactionException(TransactionExceptionCode.BeginFailed, response.getMsg());
         }

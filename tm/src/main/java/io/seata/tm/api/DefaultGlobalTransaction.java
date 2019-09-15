@@ -85,7 +85,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
             }
             return;
         }
-        if (xid != null) {
+        if (xid != null) {  // 只有发起者才能xid为null
             throw new IllegalStateException();
         }
         if (RootContext.getXID() != null) {
@@ -93,7 +93,7 @@ public class DefaultGlobalTransaction implements GlobalTransaction {
         }
         xid = transactionManager.begin(null, null, name, timeout);
         status = GlobalStatus.Begin;
-        RootContext.bind(xid);
+        RootContext.bind(xid);  // 放入threadLocal
         if (LOGGER.isInfoEnabled()) {
             LOGGER.info("Begin new global transaction [" + xid + "]");
         }

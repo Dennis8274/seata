@@ -88,7 +88,7 @@ public abstract class BaseTransactionalExecutor<T, S extends Statement> implemen
             statementProxy.getConnectionProxy().bind(xid);
         }
 
-        if (RootContext.requireGlobalLock()) {
+        if (RootContext.requireGlobalLock()) {  // 有全局锁
             statementProxy.getConnectionProxy().setGlobalLockRequire(true);
         } else {
             statementProxy.getConnectionProxy().setGlobalLockRequire(false);

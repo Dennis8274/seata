@@ -54,14 +54,14 @@ public class TransactionalTemplate {
         }
         try {
 
-            // 2. begin transaction
+            // 2. begin transaction 开启全局事务
             beginTransaction(txInfo, tx);
 
             Object rs = null;
             try {
 
                 // Do Your Business
-                rs = business.execute();
+                rs = business.execute();    // 业务处理
 
             } catch (Throwable ex) {
 
@@ -71,12 +71,12 @@ public class TransactionalTemplate {
             }
 
             // 4. everything is fine, commit.
-            commitTransaction(tx);
+            commitTransaction(tx);  // 提交事务
 
             return rs;
         } finally {
             //5. clear
-            triggerAfterCompletion();
+            triggerAfterCompletion();   // hook
             cleanUp();
         }
     }
@@ -85,7 +85,7 @@ public class TransactionalTemplate {
         //roll back
         if (txInfo != null && txInfo.rollbackOn(ex)) {
             try {
-                rollbackTransaction(tx, ex);
+                rollbackTransaction(tx, ex);    // 回滚全局事务
             } catch (TransactionException txe) {
                 // Failed to rollback
                 throw new TransactionalExecutor.ExecutionException(tx, txe,
@@ -119,9 +119,9 @@ public class TransactionalTemplate {
 
     private void beginTransaction(TransactionInfo txInfo, GlobalTransaction tx) throws TransactionalExecutor.ExecutionException {
         try {
-            triggerBeforeBegin();
-            tx.begin(txInfo.getTimeOut(), txInfo.getName());
-            triggerAfterBegin();
+            triggerBeforeBegin();   // hook
+            tx.begin(txInfo.getTimeOut(), txInfo.getName());    // 向tc注册事务
+            triggerAfterBegin();    // hook
         } catch (TransactionException txe) {
             throw new TransactionalExecutor.ExecutionException(tx, txe,
                 TransactionalExecutor.Code.BeginFailure);

@@ -184,7 +184,7 @@ public class AsyncWorker implements ResourceManagerInbound {
                             if(JdbcConstants.ORACLE.equalsIgnoreCase(dataSourceProxy.getDbType())) {
                                 UndoLogManagerOracle.batchDeleteUndoLog(xids, branchIds, conn);
                             } else {
-                                UndoLogManager.batchDeleteUndoLog(xids, branchIds, conn);
+                                UndoLogManager.batchDeleteUndoLog(xids, branchIds, conn);   // 分支事务commit 删除undo log
                             }
                         } catch (Exception ex) {
                             LOGGER.warn("Failed to batch delete undo log [" + branchIds + "/" + xids + "]", ex);

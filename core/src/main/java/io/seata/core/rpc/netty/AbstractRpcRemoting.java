@@ -72,7 +72,7 @@ public abstract class AbstractRpcRemoting extends ChannelDuplexHandler implement
     protected final ThreadPoolExecutor messageExecutor;
 
     /** Id generator of this remoting */
-    protected final PositiveAtomicCounter idGenerator = new PositiveAtomicCounter();
+    protected final PositiveAtomicCounter idGenerator = new PositiveAtomicCounter();    // 一个client实例一个idGenerator
 
     /**
      * The Futures.
@@ -130,7 +130,7 @@ public abstract class AbstractRpcRemoting extends ChannelDuplexHandler implement
      * Init.
      */
     public void init() {
-        timerExecutor.scheduleAtFixedRate(new Runnable() {
+        timerExecutor.scheduleAtFixedRate(new Runnable() {  // 过时的response清理
             @Override
             public void run() {
                 List<MessageFuture> timeoutMessageFutures = new ArrayList<MessageFuture>(futures.size());
@@ -148,7 +148,7 @@ public abstract class AbstractRpcRemoting extends ChannelDuplexHandler implement
                 }
                 nowMills = System.currentTimeMillis();
             }
-        }, TIMEOUT_CHECK_INTERNAL, TIMEOUT_CHECK_INTERNAL, TimeUnit.MILLISECONDS);
+        }, TIMEOUT_CHECK_INTERNAL, TIMEOUT_CHECK_INTERNAL, TimeUnit.MILLISECONDS);  // 3s
     }
 
     /**
@@ -364,7 +364,7 @@ public abstract class AbstractRpcRemoting extends ChannelDuplexHandler implement
                     LOGGER.debug(String.format("%s msgId:%s, body:%s", this, rpcMessage.getId(), rpcMessage.getBody()));
                 }
                 try {
-                    AbstractRpcRemoting.this.messageExecutor.execute(new Runnable() {
+                    AbstractRpcRemoting.this.messageExecutor.execute(new Runnable() {   // 是在线程中处理
                         @Override
                         public void run() {
                             try {
@@ -389,7 +389,7 @@ public abstract class AbstractRpcRemoting extends ChannelDuplexHandler implement
                         allowDumpStack = false;
                     }
                 }
-            } else {
+            } else {    // 异步处理 response
                 MessageFuture messageFuture = futures.remove(rpcMessage.getId());
                 if (LOGGER.isDebugEnabled()) {
                     LOGGER.debug(String

@@ -62,7 +62,7 @@ public class SQLVisitorFactory {
                 recognizer = new MySQLDeleteRecognizer(sql, ast);
             } else if (ast instanceof SQLSelectStatement) {
                 if (((SQLSelectStatement) ast).getSelect().getFirstQueryBlock().isForUpdate()) {
-                    recognizer = new MySQLSelectForUpdateRecognizer(sql, ast);
+                    recognizer = new MySQLSelectForUpdateRecognizer(sql, ast);  // select for update
                 }
             }
         }  else if (JdbcConstants.ORACLE.equalsIgnoreCase(dbType)) {

@@ -53,7 +53,7 @@ public abstract class AbstractDMLBaseExecutor<T, S extends Statement> extends Ba
     @Override
     public T doExecute(Object... args) throws Throwable {
         AbstractConnectionProxy connectionProxy = statementProxy.getConnectionProxy();
-        if (connectionProxy.getAutoCommit()) {
+        if (connectionProxy.getAutoCommit()) {  // 自动提交
             return executeAutoCommitTrue(args);
         } else {
             return executeAutoCommitFalse(args);
@@ -71,7 +71,7 @@ public abstract class AbstractDMLBaseExecutor<T, S extends Statement> extends Ba
         TableRecords beforeImage = beforeImage();
         T result = statementCallback.execute(statementProxy.getTargetStatement(), args);
         TableRecords afterImage = afterImage(beforeImage);
-        prepareUndoLog(beforeImage, afterImage);
+        prepareUndoLog(beforeImage, afterImage);    //
         return result;
     }
 

@@ -49,7 +49,7 @@ class NettyClientChannelManager {
     
     private final ConcurrentMap<String, Channel> channels = new ConcurrentHashMap<>();
     
-    private final GenericKeyedObjectPool<NettyPoolKey, Channel> nettyClientKeyPool;
+    private final GenericKeyedObjectPool<NettyPoolKey, Channel> nettyClientKeyPool; // common pool
     
     private Function<String, NettyPoolKey> poolKeyFunction;
     
@@ -98,7 +98,7 @@ class NettyClientChannelManager {
             LOGGER.info("will connect to " + serverAddress);
         }
         channelLocks.putIfAbsent(serverAddress, new Object());
-        synchronized (channelLocks.get(serverAddress)) {
+        synchronized (channelLocks.get(serverAddress)) {    // 连接需要加锁
             return doConnect(serverAddress);
         }
     }
